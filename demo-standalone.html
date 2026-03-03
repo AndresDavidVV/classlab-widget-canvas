@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas LMS — Demo ClassLab Widget</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+
+    /* Canvas Left Sidebar */
+    .canvas-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 100vh;
+      background: #394B58;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 12px;
+      z-index: 10001;
+    }
+    .canvas-sidebar .logo {
+      width: 44px;
+      height: 44px;
+      background: #E74C3C;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 11px;
+      margin-bottom: 20px;
+    }
+    .canvas-sidebar .nav-item {
+      width: 100%;
+      padding: 14px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #C5CDD1;
+      font-size: 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+    }
+    .canvas-sidebar .nav-item:hover, .canvas-sidebar .nav-item.active {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .canvas-sidebar .nav-item .icon { font-size: 20px; }
+
+    /* Canvas Main Content */
+    .canvas-main {
+      margin-left: 80px;
+      min-height: 100vh;
+    }
+    .canvas-topbar {
+      background: white;
+      padding: 16px 32px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .canvas-topbar h1 {
+      font-size: 20px;
+      color: #2D3B45;
+    }
+    .canvas-breadcrumb {
+      padding: 12px 32px;
+      font-size: 13px;
+      color: #666;
+    }
+    .canvas-breadcrumb a { color: #0374B5; text-decoration: none; }
+
+    .canvas-content {
+      padding: 24px 32px;
+      max-width: 1000px;
+    }
+    .canvas-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .canvas-card h2 {
+      font-size: 18px;
+      color: #2D3B45;
+      margin-bottom: 12px;
+    }
+    .canvas-card p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .module-item {
+      padding: 12px 16px;
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .module-item:hover { background: #f9f9f9; }
+    .module-item .icon { font-size: 18px; }
+    .module-item .title { color: #0374B5; font-weight: 500; }
+    .module-item .meta { color: #888; font-size: 12px; margin-left: auto; }
+
+    .avatar-circle {
+      width: 36px;
+      height: 36px;
+      background: #0374B5;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .canvas-badge {
+      background: #E74C3C;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      position: absolute;
+      top: 8px;
+      right: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      background: #e8f4fd;
+      color: #0374B5;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas Left Sidebar -->
+  <nav class="canvas-sidebar">
+    <div class="logo">Scala</div>
+    <a class="nav-item" href="#">
+      <span class="icon">🏠</span>
+      <span>Inicio</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="icon">📚</span>
+      <span>Cursos</span>
+    </a>
+    <a class="nav-item" href="#" style="position:relative;">
+      <span class="icon">📥</span>
+      <span>Inbox</span>
+      <span class="canvas-badge">3</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">📅</span>
+      <span>Calendario</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">📊</span>
+      <span>Notas</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">👥</span>
+      <span>Grupos</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">⚙️</span>
+      <span>Ajustes</span>
+    </a>
+  </nav>
+
+  <!-- Canvas Main Content -->
+  <div class="canvas-main">
+    <div class="canvas-topbar">
+      <h1>Pedagogía y Didáctica — Uniminuto</h1>
+      <div class="avatar-circle">AV</div>
+    </div>
+    <div class="canvas-breadcrumb">
+      <a href="#">Cursos</a> &gt; <a href="#">Pedagogía y Didáctica</a> &gt; Módulos
+    </div>
+
+    <div class="canvas-content">
+      <div class="canvas-card">
+        <h2>📋 Módulo 1: Fundamentos de la Enseñanza</h2>
+        <p>Bienvenido al primer módulo. Explora los fundamentos pedagógicos y practica tus habilidades docentes con el simulador ClassLab.</p>
+        <div>
+          <span class="tag">📖 5 lecturas</span>
+          <span class="tag">🎥 3 videos</span>
+          <span class="tag">🎓 1 simulación</span>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <span class="icon">📄</span>
+        <span class="title">1.1 Introducción a la Pedagogía Moderna</span>
+        <span class="meta">Lectura · 15 min</span>
+      </div>
+      <div class="module-item">
+        <span class="icon">🎥</span>
+        <span class="title">1.2 Video: Técnicas de Enseñanza Activa</span>
+        <span class="meta">Video · 22 min</span>
+      </div>
+      <div class="module-item">
+        <span class="icon">📄</span>
+        <span class="title">1.3 El Rol del Docente en el Siglo XXI</span>
+        <span class="meta">Lectura · 10 min</span>
+      </div>
+      <div class="module-item">
+        <span class="icon">📝</span>
+        <span class="title">1.4 Quiz: Conceptos Fundamentales</span>
+        <span class="meta">Evaluación · 20 pts</span>
+      </div>
+
+      <div class="canvas-card" style="margin-top: 28px;">
+        <h2>📋 Módulo 2: Estrategias Didácticas</h2>
+        <p>Profundiza en estrategias didácticas y aplica lo aprendido en simulaciones de clase con estudiantes virtuales.</p>
+        <div>
+          <span class="tag">📖 4 lecturas</span>
+          <span class="tag">🎥 2 videos</span>
+          <span class="tag">🎓 2 simulaciones</span>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <span class="icon">📄</span>
+        <span class="title">2.1 Aprendizaje Basado en Problemas (ABP)</span>
+        <span class="meta">Lectura · 18 min</span>
+      </div>
+      <div class="module-item">
+        <span class="icon">🎥</span>
+        <span class="title">2.2 Video: Aula Invertida en Práctica</span>
+        <span class="meta">Video · 28 min</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+/**
+ * ClassLab Widget for Canvas LMS
+ * Floating widget that embeds ClassLab.app simulator
+ * 
+ * Usage: Add this script to Canvas LMS via Theme Editor > Custom JavaScript
+ * Or inject via: <script src="classlab-widget.js"><\/script>
+ */
+(function() {
+  'use strict';
+
+  const CLASSLAB_URL = 'https://classlab.app';
+  const WIDGET_ID = 'classlab-widget-container';
+
+  // Don't initialize twice
+  if (document.getElementById(WIDGET_ID)) return;
+
+  // CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    #${WIDGET_ID} {
+      position: fixed;
+      z-index: 10000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Minimized state - positioned after Canvas left nav */
+    #${WIDGET_ID}.minimized {
+      left: 90px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 64px;
+      height: auto;
+    }
+
+    /* Expanded state - fills right of Canvas sidebar */
+    #${WIDGET_ID}.expanded {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+    }
+
+    /* Minimized widget button */
+    .classlab-mini {
+      width: 64px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 6px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      border: none;
+      color: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: classlab-pulse 3s ease-in-out infinite;
+    }
+
+    .classlab-mini:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 28px rgba(99, 102, 241, 0.6);
+    }
+
+    .classlab-mini-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .classlab-mini-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .classlab-mini-cta {
+      font-size: 7px;
+      opacity: 0.85;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    @keyframes classlab-pulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); }
+      50% { box-shadow: 0 4px 30px rgba(99, 102, 241, 0.7); }
+    }
+
+    /* Expanded panel */
+    .classlab-panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -4px 0 30px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Account for Canvas left nav (~80px collapsed, ~260px expanded) */
+    .classlab-panel {
+      width: calc(100% - 80px);
+    }
+
+    @media (min-width: 1200px) {
+      .classlab-panel {
+        width: calc(100% - 80px);
+      }
+    }
+
+    .classlab-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      min-height: 48px;
+    }
+
+    .classlab-panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .classlab-panel-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .classlab-panel-close:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    .classlab-iframe-wrap {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .classlab-iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Hide minimized button when expanded */
+    #${WIDGET_ID}.expanded .classlab-mini { display: none; }
+    #${WIDGET_ID}.minimized .classlab-panel { display: none; }
+  `;
+  document.head.appendChild(style);
+
+  // Container
+  const container = document.createElement('div');
+  container.id = WIDGET_ID;
+  container.className = 'minimized';
+
+  // Minimized widget
+  const mini = document.createElement('button');
+  mini.className = 'classlab-mini';
+  mini.setAttribute('aria-label', 'Abrir ClassLab - Simulador de Clases');
+  mini.innerHTML = `
+    <div class="classlab-mini-icon">🎓</div>
+    <div class="classlab-mini-label">ClassLab</div>
+    <div class="classlab-mini-cta">¡Practica tu clase!</div>
+  `;
+  mini.addEventListener('click', () => expand());
+
+  // Expanded panel
+  const panel = document.createElement('div');
+  panel.className = 'classlab-panel';
+  panel.innerHTML = `
+    <div class="classlab-panel-header">
+      <div class="classlab-panel-title">🎓 ClassLab — Simulador de Clases</div>
+      <button class="classlab-panel-close" aria-label="Cerrar simulador">✕</button>
+    </div>
+    <div class="classlab-iframe-wrap">
+      <iframe id="classlab-iframe" title="ClassLab Simulator" allow="microphone; camera; display-capture" loading="lazy"></iframe>
+    </div>
+  `;
+
+  panel.querySelector('.classlab-panel-close').addEventListener('click', () => collapse());
+
+  container.appendChild(mini);
+  container.appendChild(panel);
+  document.body.appendChild(container);
+
+  // Close on backdrop click
+  container.addEventListener('click', (e) => {
+    if (e.target === container && container.classList.contains('expanded')) {
+      collapse();
+    }
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && container.classList.contains('expanded')) {
+      collapse();
+    }
+  });
+
+  let iframeLoaded = false;
+
+  function expand() {
+    const iframe = document.getElementById('classlab-iframe');
+    if (!iframeLoaded) {
+      iframe.src = CLASSLAB_URL;
+      iframeLoaded = true;
+    }
+    container.className = 'expanded';
+  }
+
+  function collapse() {
+    container.className = 'minimized';
+  }
+
+  // Public API
+  window.ClassLabWidget = {
+    open: expand,
+    close: collapse,
+    setUrl: function(url) {
+      const iframe = document.getElementById('classlab-iframe');
+      iframe.src = url;
+      iframeLoaded = true;
+    }
+  };
+})();
+
+</script>
+</body>
+</html>
