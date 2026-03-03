@@ -266,8 +266,21 @@
   const CLASSLAB_URL = 'https://classlab.app';
   const WIDGET_ID = 'classlab-widget-container';
 
+  // ========================================
+  // CONFIGURACIÓN: IDs de cursos permitidos
+  // Dejar vacío [] para mostrar en TODOS los cursos
+  // Ejemplo: ['12345', '67890']
+  // ========================================
+  const ALLOWED_COURSE_IDS = [];
+
   // Don't initialize twice
   if (document.getElementById(WIDGET_ID)) return;
+
+  // Course filter: only show widget on matching course pages
+  if (ALLOWED_COURSE_IDS.length > 0) {
+    const courseMatch = window.location.pathname.match(/\/courses\/(\d+)/);
+    if (!courseMatch || !ALLOWED_COURSE_IDS.includes(courseMatch[1])) return;
+  }
 
   // CSS
   const style = document.createElement('style');
