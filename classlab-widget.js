@@ -2,6 +2,9 @@
  * ClassLab Widget for Canvas LMS
  * Floating widget that embeds ClassLab.app simulator
  * 
+ * Developed by LiDARit.com / AITopStaff.com
+ * https://lidarit.com | https://aitopstaff.com
+ * 
  * Usage: Add this script to Canvas LMS via Theme Editor > Custom JavaScript
  * Or inject via: <script src="classlab-widget.js"><\/script>
  */

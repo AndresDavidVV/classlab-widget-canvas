@@ -1,5 +1,7 @@
 # 🎓 ClassLab Widget — Guía de Integración para Canvas LMS
 
+> Desarrollado por [LiDARit.com](https://lidarit.com) / [AITopStaff.com](https://aitopstaff.com)
+
 ## ¿Qué es?
 
 Un widget flotante que aparece en todas las páginas de Canvas LMS, invitando a los estudiantes a practicar con el simulador de clases ClassLab. Al hacer clic, se expande en pantalla completa cargando classlab.app.
@@ -171,4 +173,7 @@ Esto permite integraciones más profundas, como abrir el simulador desde un bot�
 
 ---
 
-**Contacto:** Para soporte técnico con la integración, contactar al equipo de ClassLab / AITopStaff.
+---
+
+**Desarrollado por [LiDARit.com](https://lidarit.com) / [AITopStaff.com](https://aitopstaff.com)**
+Para soporte técnico con la integración, contactar al equipo en [aitopstaff.com](https://aitopstaff.com).
